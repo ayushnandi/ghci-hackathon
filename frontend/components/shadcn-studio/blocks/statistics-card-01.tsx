@@ -11,9 +11,10 @@ type StatisticsCardProps = {
   title: string
   changePercentage: string
   className?: string
+  action?: ReactNode
 }
 
-const StatisticsCard = ({ icon, value, title, changePercentage, className }: StatisticsCardProps) => {
+const StatisticsCard = ({ icon, value, title, changePercentage, className, action }: StatisticsCardProps) => {
   return (
     <Card className={cn('gap-4', className)}>
       <CardHeader className='flex items-center gap-2'>
@@ -21,6 +22,7 @@ const StatisticsCard = ({ icon, value, title, changePercentage, className }: Sta
           {icon}
         </div>
         <span className='text-2xl'>{value}</span>
+        {action && <div className='ml-auto'>{action}</div>}
       </CardHeader>
       <CardContent className='flex flex-col gap-2'>
         <span className='font-semibold'>{title}</span>

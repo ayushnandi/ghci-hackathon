@@ -54,7 +54,7 @@ const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comp
       <CardContent className='flex flex-1 flex-col gap-4'>
         <div className='flex flex-col gap-1'>
           <div className='flex items-center gap-2'>
-            <span className='text-2xl font-semibold'>${earning}</span>
+            <span className='text-2xl font-semibold'>${earning.toLocaleString()}</span>
             <span className='flex items-center gap-1'>
               {trend === 'up' ? <ChevronUpIcon className='size-4' /> : <ChevronDownIcon className='size-4' />}
               <span className='text-sm'>{percentage}%</span>
@@ -63,22 +63,22 @@ const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comp
           <span className='text-muted-foreground text-sm'>{comparisonText}</span>
         </div>
         <div className='flex flex-1 flex-col justify-evenly gap-4'>
-          {earningData.map((earning, index) => (
+          {earningData.map((account, index) => (
             <div key={index} className='flex items-center justify-between gap-2.5'>
               <div className='flex items-center justify-between gap-2.5'>
                 <Avatar className='size-11 rounded-sm'>
                   <AvatarFallback className='bg-primary/10 shrink-0 rounded-sm'>
-                    <img src={earning.img} alt={earning.platform} className='size-6' />
+                    <img src={account.img} alt={account.platform} className='size-6' />
                   </AvatarFallback>
                 </Avatar>
                 <div className='flex flex-col gap-1'>
-                  <span className='font-medium'>{earning.platform}</span>
-                  <span className='text-muted-foreground text-sm'>{earning.technologies}</span>
+                  <span className='font-medium'>{account.platform}</span>
+                  <span className='text-muted-foreground text-sm'>{account.technologies}</span>
                 </div>
               </div>
               <div className='space-y-2'>
-                <p className='text-sm'>{earning.earnings}</p>
-                <Progress value={earning.progressPercentage} className='w-36' />
+                <p className='text-sm font-medium'>{account.earnings}</p>
+                <Progress value={account.progressPercentage} className='w-36' />
               </div>
             </div>
           ))}

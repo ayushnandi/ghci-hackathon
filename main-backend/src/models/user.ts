@@ -2,7 +2,7 @@ import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface IUser extends Document {
-  username: string;
+  username?: string;
   email: string;
   role: "local" | "google" | "clerk";
   clerkId?: string;
@@ -17,7 +17,7 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
-    username: { type: String, required: true },
+    username: { type: String, required: false },
 
     email: { type: String, required: true, unique: true },
 
