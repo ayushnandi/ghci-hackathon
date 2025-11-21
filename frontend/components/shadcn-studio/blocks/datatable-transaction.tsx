@@ -36,60 +36,87 @@ export type Item = {
   name: string
   email: string
   amount: number
-  status: 'pending' | 'processing' | 'paid' | 'failed'
-  paidBy: 'mastercard' | 'visa'
+  status: 'completed' | 'pending' | 'failed' | 'processing'
+  transactionType: 'debit' | 'credit'
+  paymentMethod: 'upi' | 'card' | 'netbanking' | 'wallet'
+  category: string
+  date: string
+  description: string
 }
 
 export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: 'name',
-    header: 'Customer',
+    header: 'Transaction',
     cell: ({ row }) => (
       <div className='flex items-center gap-2'>
         <Avatar className='size-9'>
-          <AvatarImage src={row.original.avatar} alt='Hallie Richards' />
+          <AvatarImage src={row.original.avatar} alt={row.original.name} />
           <AvatarFallback className='text-xs'>{row.original.avatarFallback}</AvatarFallback>
         </Avatar>
         <div className='flex flex-col text-sm'>
           <span className='text-card-foreground font-medium'>{row.getValue('name')}</span>
-          <span className='text-muted-foreground'>{row.original.email}</span>
+          <span className='text-muted-foreground text-xs'>{row.original.description}</span>
         </div>
       </div>
     )
+  },
+  {
+    accessorKey: 'date',
+    header: 'Date',
+    cell: ({ row }) => {
+      const date = new Date(row.getValue('date'))
+      return (
+        <div className='flex flex-col text-sm'>
+          <span className='font-medium'>{date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+          <span className='text-muted-foreground text-xs'>
+            {date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+          </span>
+        </div>
+      )
+    }
   },
   {
     accessorKey: 'amount',
     header: 'Amount',
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('amount'))
+      const transactionType = row.original.transactionType
 
       const formatted = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
       }).format(amount)
 
-      return <span>{formatted}</span>
+      return (
+        <span className={transactionType === 'credit' ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+          {transactionType === 'credit' ? '+' : '-'}
+          {formatted}
+        </span>
+      )
     }
   },
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => <Badge className='bg-primary/10 text-primary px-1.5 capitalize'>{row.getValue('status')}</Badge>
+    cell: ({ row }) => {
+      const status = row.getValue('status') as string
+      const statusColors: Record<string, string> = {
+        completed: 'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400',
+        pending: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400',
+        processing: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
+        failed: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400'
+      }
+      return <Badge className={`${statusColors[status]} px-1.5 capitalize`}>{status}</Badge>
+    }
   },
   {
-    accessorKey: 'paidBy',
-    header: () => <span className='w-fit'>Paid by</span>,
-    cell: ({ row }) => (
-      <img
-        src={
-          row.getValue('paidBy') === 'mastercard'
-            ? 'https://cdn.shadcnstudio.com/ss-assets/blocks/data-table/image-1.png'
-            : 'https://cdn.shadcnstudio.com/ss-assets/blocks/data-table/image-2.png'
-        }
-        alt='Payment platform'
-        className='w-10.5'
-      />
-    )
+    accessorKey: 'paymentMethod',
+    header: () => <span className='w-fit'>Method</span>,
+    cell: ({ row }) => {
+      const method = row.getValue('paymentMethod') as string
+      return <span className='text-sm capitalize'>{method}</span>
+    }
   },
   {
     id: 'actions',
