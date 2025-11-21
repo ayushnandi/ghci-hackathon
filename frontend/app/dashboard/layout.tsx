@@ -20,15 +20,8 @@ import {
 } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
+import { DashboardBreadcrumbs } from '@/components/dashboard-breadcrumbs'
 import { Separator } from '@/components/ui/separator'
 import {
   Sidebar,
@@ -182,21 +175,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <div className='flex items-center gap-4'>
                 <SidebarTrigger className='[&_svg]:!size-5' />
                 <Separator orientation='vertical' className='hidden !h-4 sm:block' />
-                <Breadcrumb className='hidden sm:block'>
-                  <BreadcrumbList>
-                    <BreadcrumbItem>
-                      <BreadcrumbLink href='#'>Home</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbLink href='#'>Dashboard</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>Free</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
+                <DashboardBreadcrumbs />
               </div>
               <div className='flex items-center gap-1.5'>
                 <LanguageDropdown

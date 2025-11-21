@@ -1,6 +1,7 @@
 'use client'
 
 import { Bar, BarChart } from 'recharts'
+import { LandmarkIcon } from 'lucide-react'
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
@@ -8,34 +9,34 @@ import { Separator } from '@/components/ui/separator'
 
 import { cn } from '@/lib/utils'
 
-// Product reached data
-const productReachChartData = [
-  { month: 'January', reached: 168 },
-  { month: 'February', reached: 305 },
-  { month: 'March', reached: 213 },
-  { month: 'April', reached: 330 },
-  { month: 'May', reached: 305 }
+// Transaction activity data - last 5 months
+const transactionChartData = [
+  { month: 'August', transactions: 168 },
+  { month: 'September', transactions: 205 },
+  { month: 'October', transactions: 213 },
+  { month: 'November', transactions: 195 },
+  { month: 'December', transactions: 225 }
 ]
 
-const productReachChartConfig = {
-  reached: {
-    label: 'Reached',
+const transactionChartConfig = {
+  transactions: {
+    label: 'Transactions',
     color: 'var(--primary)'
   }
 } satisfies ChartConfig
 
-// Order placed data
-const orderPlacedChartData = [
-  { month: 'January', orders: 168 },
-  { month: 'February', orders: 305 },
-  { month: 'March', orders: 213 },
-  { month: 'April', orders: 330 },
-  { month: 'May', orders: 305 }
+// Deposits data - last 5 months
+const depositsChartData = [
+  { month: 'August', deposits: 42 },
+  { month: 'September', deposits: 58 },
+  { month: 'October', deposits: 51 },
+  { month: 'November', deposits: 63 },
+  { month: 'December', deposits: 72 }
 ]
 
-const orderPlacedChartConfig = {
-  orders: {
-    label: 'Orders',
+const depositsChartConfig = {
+  deposits: {
+    label: 'Deposits',
     color: 'color-mix(in oklab, var(--primary) 10%, transparent)'
   }
 } satisfies ChartConfig
@@ -45,37 +46,35 @@ const ProductInsightsCard = ({ className }: { className?: string }) => {
     <Card className={cn('gap-4', className)}>
       <CardHeader className='flex justify-between gap-2'>
         <div className='flex flex-col gap-1'>
-          <span className='text-lg font-semibold'>Product insight</span>
-          <span className='text-muted-foreground text-sm'>Published on 12 MAY 2025 - 6:10 PM</span>
+          <span className='text-lg font-semibold'>Account Activity</span>
+          <span className='text-muted-foreground text-sm'>Last updated on 21 NOV 2025 - 3:45 PM</span>
         </div>
-        <img
-          src='https://cdn.shadcnstudio.com/ss-assets/blocks/dashboard-application/widgets/image-7.png'
-          alt='Product'
-          className='w-20.5 rounded-md'
-        />
+        <div className='bg-primary/10 flex size-16 items-center justify-center rounded-md'>
+          <LandmarkIcon className='text-primary size-8' />
+        </div>
       </CardHeader>
       <CardContent className='space-y-4'>
         <Separator />
         <div className='flex items-center justify-between gap-1'>
           <div className='flex flex-col gap-1'>
-            <span className='text-xs'>Product reached</span>
-            <span className='text-2xl font-semibold'>21,153</span>
+            <span className='text-xs'>Total Transactions</span>
+            <span className='text-2xl font-semibold'>1,006</span>
           </div>
-          <ChartContainer config={productReachChartConfig} className='min-h-13 max-w-18'>
-            <BarChart accessibilityLayer data={productReachChartData} barSize={8}>
-              <Bar dataKey='reached' fill='var(--color-reached)' radius={2} />
+          <ChartContainer config={transactionChartConfig} className='min-h-13 max-w-18'>
+            <BarChart accessibilityLayer data={transactionChartData} barSize={8}>
+              <Bar dataKey='transactions' fill='var(--color-transactions)' radius={2} />
             </BarChart>
           </ChartContainer>
         </div>
 
         <div className='flex items-center justify-between gap-1'>
           <div className='flex flex-col gap-1'>
-            <span className='text-xs'>Order placed </span>
-            <span className='text-2xl font-semibold'>2,123</span>
+            <span className='text-xs'>Deposits Made</span>
+            <span className='text-2xl font-semibold'>286</span>
           </div>
-          <ChartContainer config={orderPlacedChartConfig} className='min-h-13 max-w-18'>
-            <BarChart accessibilityLayer data={orderPlacedChartData} barSize={8}>
-              <Bar dataKey='orders' fill='var(--color-orders)' radius={2} />
+          <ChartContainer config={depositsChartConfig} className='min-h-13 max-w-18'>
+            <BarChart accessibilityLayer data={depositsChartData} barSize={8}>
+              <Bar dataKey='deposits' fill='var(--color-deposits)' radius={2} />
             </BarChart>
           </ChartContainer>
         </div>

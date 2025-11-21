@@ -1,12 +1,13 @@
 'use client'
 
 import {
+  ArrowDownUpIcon,
   BadgePercentIcon,
   ChartNoAxesCombinedIcon,
   CirclePercentIcon,
-  DollarSignIcon,
-  ShoppingBagIcon,
-  TrendingUpIcon
+  CoinsIcon,
+  PiggyBankIcon,
+  TrendingDownIcon
 } from 'lucide-react'
 
 import { Bar, BarChart, Label, Pie, PieChart } from 'recharts'
@@ -15,13 +16,13 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 
-const salesPlanPercentage = 54
+const budgetPercentage = 78
 const totalBars = 24
-const filledBars = Math.round((salesPlanPercentage * totalBars) / 100)
+const filledBars = Math.round((budgetPercentage * totalBars) / 100)
 
-// Sales chart data
-const salesChartData = Array.from({ length: totalBars }, (_, index) => {
-  const date = new Date(2025, 5, 15)
+// Budget tracking chart data
+const budgetChartData = Array.from({ length: totalBars }, (_, index) => {
+  const date = new Date(2025, 11, 1 + index)
 
   const formattedDate = date.toLocaleDateString('en-GB', {
     day: '2-digit',
@@ -31,59 +32,59 @@ const salesChartData = Array.from({ length: totalBars }, (_, index) => {
 
   return {
     date: formattedDate,
-    sales: index < filledBars ? 315 : 0
+    spending: index < filledBars ? 315 : 0
   }
 })
 
-const salesChartConfig = {
-  sales: {
-    label: 'Sales'
+const budgetChartConfig = {
+  spending: {
+    label: 'Spending'
   }
 } satisfies ChartConfig
 
 const MetricsData = [
   {
-    icons: <TrendingUpIcon className='size-5' />,
-    title: 'Sales trend',
-    value: '$11,548'
+    icons: <TrendingDownIcon className='size-5' />,
+    title: 'Monthly Spending',
+    value: '$7,854'
   },
   {
     icons: <BadgePercentIcon className='size-5' />,
-    title: 'Discount offers',
-    value: '$1,326'
+    title: 'Cashback Earned',
+    value: '$425'
   },
   {
-    icons: <DollarSignIcon className='size-5' />,
-    title: 'Net profit',
-    value: '$17,356'
+    icons: <PiggyBankIcon className='size-5' />,
+    title: 'Total Savings',
+    value: '$24,680'
   },
   {
-    icons: <ShoppingBagIcon className='size-5' />,
-    title: 'Total orders',
-    value: '248'
+    icons: <ArrowDownUpIcon className='size-5' />,
+    title: 'Total Transactions',
+    value: '1,006'
   }
 ]
 
-const revenueChartData = [
-  { month: 'january', sales: 340, fill: 'var(--color-january)' },
-  { month: 'february', sales: 200, fill: 'var(--color-february)' },
-  { month: 'march', sales: 200, fill: 'var(--color-march)' }
+const savingsGoalChartData = [
+  { category: 'achieved', amount: 115000, fill: 'var(--color-achieved)' },
+  { category: 'housing', amount: 28800, fill: 'var(--color-housing)' },
+  { category: 'other', amount: 45200, fill: 'var(--color-other)' }
 ]
 
-const revenueChartConfig = {
-  sales: {
-    label: 'Sales'
+const savingsGoalChartConfig = {
+  amount: {
+    label: 'Amount'
   },
-  january: {
-    label: 'January',
+  achieved: {
+    label: 'Savings Achieved',
     color: 'var(--primary)'
   },
-  february: {
-    label: 'February',
+  housing: {
+    label: 'Housing',
     color: 'color-mix(in oklab, var(--primary) 60%, transparent)'
   },
-  march: {
-    label: 'March',
+  other: {
+    label: 'Other Expenses',
     color: 'color-mix(in oklab, var(--primary) 20%, transparent)'
   }
 } satisfies ChartConfig
@@ -94,16 +95,14 @@ const SalesMetricsCard = ({ className }: { className?: string }) => {
       <CardContent className='space-y-4'>
         <div className='grid gap-6 lg:grid-cols-5'>
           <div className='flex flex-col gap-7 lg:col-span-3'>
-            <span className='text-lg font-semibold'>Sales metrics</span>
+            <span className='text-lg font-semibold'>Banking Metrics</span>
             <div className='flex items-center gap-3'>
-              <img
-                src='https://cdn.shadcnstudio.com/ss-assets/logo/logo-square.png'
-                className='size-10.5 rounded-lg'
-                alt='logo'
-              />
+              <Avatar className='size-12 rounded-lg'>
+                <AvatarFallback className='rounded-lg text-lg font-medium'>SA</AvatarFallback>
+              </Avatar>
               <div className='flex flex-col gap-0.5'>
-                <span className='text-xl font-medium'>Sandy&apos; Company</span>
-                <span className='text-muted-foreground text-sm'>sandy@company.com</span>
+                <span className='text-xl font-medium'>Sarah Anderson</span>
+                <span className='text-muted-foreground text-sm'>Account ****8945</span>
               </div>
             </div>
 
@@ -125,17 +124,17 @@ const SalesMetricsCard = ({ className }: { className?: string }) => {
           </div>
           <Card className='gap-4 py-4 shadow-none lg:col-span-2'>
             <CardHeader className='gap-1'>
-              <CardTitle className='text-lg font-semibold'>Revenue goal</CardTitle>
+              <CardTitle className='text-lg font-semibold'>Savings Goal</CardTitle>
             </CardHeader>
 
             <CardContent className='px-0'>
-              <ChartContainer config={revenueChartConfig} className='h-38.5 w-full'>
+              <ChartContainer config={savingsGoalChartConfig} className='h-38.5 w-full'>
                 <PieChart margin={{ top: 0, bottom: 0, left: 0, right: 0 }}>
                   <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                   <Pie
-                    data={revenueChartData}
-                    dataKey='sales'
-                    nameKey='month'
+                    data={savingsGoalChartData}
+                    dataKey='amount'
+                    nameKey='category'
                     startAngle={300}
                     endAngle={660}
                     innerRadius={58}
@@ -152,14 +151,14 @@ const SalesMetricsCard = ({ className }: { className?: string }) => {
                                 y={(viewBox.cy || 0) - 12}
                                 className='fill-card-foreground text-lg font-medium'
                               >
-                                256.24
+                                $115K
                               </tspan>
                               <tspan
                                 x={viewBox.cx}
                                 y={(viewBox.cy || 0) + 19}
                                 className='fill-muted-foreground text-sm'
                               >
-                                Total Profit
+                                Total Saved
                               </tspan>
                             </text>
                           )
@@ -172,39 +171,39 @@ const SalesMetricsCard = ({ className }: { className?: string }) => {
             </CardContent>
 
             <CardFooter className='justify-between'>
-              <span className='text-xl'>Plan completed</span>
-              <span className='text-2xl font-medium'>56%</span>
+              <span className='text-xl'>Goal Achieved</span>
+              <span className='text-2xl font-medium'>115%</span>
             </CardFooter>
           </Card>
         </div>
         <Card className='shadow-none'>
           <CardContent className='grid gap-4 px-4 lg:grid-cols-5'>
             <div className='flex flex-col justify-center gap-6'>
-              <span className='text-lg font-semibold'>Sales plan</span>
-              <span className='max-lg:5xl text-6xl'>{salesPlanPercentage}%</span>
-              <span className='text-muted-foreground text-sm'>Percentage profit from total sales</span>
+              <span className='text-lg font-semibold'>Budget Tracker</span>
+              <span className='max-lg:5xl text-6xl'>{budgetPercentage}%</span>
+              <span className='text-muted-foreground text-sm'>Budget utilization this month</span>
             </div>
             <div className='flex flex-col gap-6 text-lg md:col-span-4'>
-              <span className='font-medium'>Cohort analysis indicators</span>
+              <span className='font-medium'>Spending Analysis</span>
               <span className='text-muted-foreground text-wrap'>
-                Analyzes the behaviour of a group of users who joined a product/service at the same time. over a certain
-                period.
+                Track your spending patterns across different categories and monitor your budget adherence throughout the
+                month.
               </span>
               <div className='grid gap-6 md:grid-cols-2'>
                 <div className='flex items-center gap-2'>
                   <ChartNoAxesCombinedIcon className='size-6' />
-                  <span className='text-lg font-medium'>Open Statistics</span>
+                  <span className='text-lg font-medium'>Category Breakdown</span>
                 </div>
                 <div className='flex items-center gap-2'>
                   <CirclePercentIcon className='size-6' />
-                  <span className='text-lg font-medium'>Percentage Change</span>
+                  <span className='text-lg font-medium'>Budget vs Actual</span>
                 </div>
               </div>
 
-              <ChartContainer config={salesChartConfig} className='h-7.75 w-full'>
+              <ChartContainer config={budgetChartConfig} className='h-7.75 w-full'>
                 <BarChart
                   accessibilityLayer
-                  data={salesChartData}
+                  data={budgetChartData}
                   margin={{
                     left: 0,
                     right: 0
@@ -212,7 +211,7 @@ const SalesMetricsCard = ({ className }: { className?: string }) => {
                   maxBarSize={16}
                 >
                   <Bar
-                    dataKey='sales'
+                    dataKey='spending'
                     fill='var(--primary)'
                     background={{ fill: 'color-mix(in oklab, var(--primary) 10%, transparent)', radius: 12 }}
                     radius={12}
