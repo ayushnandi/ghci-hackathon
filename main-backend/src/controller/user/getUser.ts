@@ -20,7 +20,6 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
           image: clerkUser.imageUrl,
         },
         db: dbUser,
-        temp: "Fetched"
       },
     });
   } catch (error) {

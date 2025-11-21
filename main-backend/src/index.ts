@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(clerkMiddleware());
 app.use(cookieParser());
 
-// public / protected defined inside
+// public / protected defined
 app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
