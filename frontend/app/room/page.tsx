@@ -11,8 +11,10 @@ import {
 import { Room, Track } from "livekit-client";
 import "@livekit/components-styles";
 import { useEffect, useState } from "react";
+import { useAppContext } from "@/context";
 
 export default function RoomPage() {
+  const { user } = useAppContext();
   const [token, setToken] = useState();
   // TODO: get user input for room and name
   const room = "quickstart-room";
@@ -31,7 +33,11 @@ export default function RoomPage() {
     let mounted = true;
     (async () => {
       try {
-        const resp = await fetch(`/api/token?room=${room}&username=${name}`);
+        const resp = await fetch(
+          `/api/token?room=${room}&username=${name}&userData=${encodeURIComponent(
+            JSON.stringify(user)
+          )}`
+        );
         const data = await resp.json();
         if (!mounted) return;
         if (data.token) {

@@ -1,9 +1,6 @@
 from livekit.agents import Agent
 # from tools.lookup_datetime import lookup_datetime
 from controllers.account import account_tools
-
-GENERIC_AGENT_INST = "You are a helpful assistant called Miluwakee. Respond to user queries concisely and accurately."
-
 class GenericAssistant(Agent):
     def __init__(self, metadata: dict | None = None) -> None:
         self.metadata = metadata or {}

@@ -20,9 +20,9 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(clerkMiddleware());
 app.use(cookieParser());
+app.use(clerkMiddleware());
+app.use(express.json());
 
 // public / protected defined
 app.use("/api/v1", router);

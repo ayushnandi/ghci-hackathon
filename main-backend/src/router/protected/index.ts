@@ -1,15 +1,12 @@
 import express from "express";
 import userRouter from "./routes/user";
-import { requireAuth } from "@clerk/express";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.json({
-    status: true,
-    route: "/protected",
-  });
+router.use((req, res, next) => {
+  console.log("Incoming request:", req.method, req.originalUrl);
+  next();
 });
-router.use("/user", requireAuth(), userRouter);
+router.use("/user", userRouter);
 
 export default router;
