@@ -5,7 +5,6 @@ from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from livekit import agents, rtc
 from agents.generic import GenericAssistant
 import os
-import json
 
 load_dotenv()
 
@@ -17,12 +16,6 @@ server = AgentServer()
 
 @server.rtc_session()
 async def my_agent(ctx: agents.JobContext):
-    for p in ctx.room.participants:
-        if p.is_local is False:  
-            user_metadata = p.metadata
-            print("User Metadata =>", user_metadata)
-            break
-
     session = AgentSession(
         stt=stt,
         llm=llm,
@@ -35,8 +28,8 @@ async def my_agent(ctx: agents.JobContext):
         room=ctx.room,
         agent=GenericAssistant(
             metadata={
-                "assistant_name" : "Choral",
-                "user" : json.loads(user_metadata)
+                "name" : "Vikalp Sharma",
+                "role" : "Your creator"
             }
         ),
         room_options=room_io.RoomOptions(

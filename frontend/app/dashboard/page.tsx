@@ -110,8 +110,8 @@ export default function Dashboard() {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/protected/user`,
         { withCredentials: true }
       );
-      console.log("user Data: ", data);
-      setUser(data.user.clerk);
+      console.log("user Data: ", data.user);
+      setUser(data.user);
     };
     fetchUserData();
   }, []);

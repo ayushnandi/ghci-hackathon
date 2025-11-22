@@ -40,7 +40,13 @@ export async function GET(req: NextRequest) {
     identity: username,
     metadata: userData,
   });
-  at.addGrant({ room, roomJoin: true, canPublish: true, canSubscribe: true });
+  at.addGrant({
+    room,
+    roomJoin: true,
+    canPublish: true,
+    canSubscribe: true,
+    agent: true,
+  });
 
   return NextResponse.json(
     { token: await at.toJwt() },
