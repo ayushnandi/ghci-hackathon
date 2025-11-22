@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
+import Link from "next/link";
 import {
   ArrowRightLeftIcon,
   BellIcon,
@@ -48,15 +48,15 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
 
-import LanguageDropdown from '@/components/shadcn-studio/blocks/dropdown-language'
-import ProfileDropdown from '@/components/shadcn-studio/blocks/dropdown-profile'
-import { useActivePath } from '@/hooks/use-active-path'
-import { BrosBankLogo } from '@/components/icons/brosbank-logo'
+import LanguageDropdown from "@/components/shadcn-studio/blocks/dropdown-language";
+import ProfileDropdown from "@/components/shadcn-studio/blocks/dropdown-profile";
+import { useActivePath } from "@/hooks/use-active-path";
+import { BrosBankLogo } from "@/components/icons/brosbank-logo";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const isActive = useActivePath()
+  const isActive = useActivePath();
   return (
-    <div className='flex min-h-dvh w-full'>
+    <div className="flex min-h-dvh w-full">
       <SidebarProvider>
         <Sidebar collapsible="icon">
           <SidebarContent>
@@ -290,19 +290,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Separator orientation='vertical' className='hidden !h-4 sm:block' />
                 <DashboardBreadcrumbs />
               </div>
-              <div className='flex items-center gap-1.5'>
+              <div className="flex items-center gap-1.5">
                 <LanguageDropdown
                   trigger={
-                    <Button variant='ghost' size='icon'>
+                    <Button variant="ghost" size="icon">
                       <LanguagesIcon />
                     </Button>
                   }
                 />
                 <ProfileDropdown
                   trigger={
-                    <Button variant='ghost' size='icon' className='size-9.5'>
-                      <Avatar className='size-9.5 rounded-md'>
-                        <AvatarImage src='https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-1.png' />
+                    <Button variant="ghost" size="icon" className="size-9.5">
+                      <Avatar className="size-9.5 rounded-md">
+                        <AvatarImage src="https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-1.png" />
                         <AvatarFallback>JD</AvatarFallback>
                       </Avatar>
                     </Button>
@@ -312,7 +312,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </header>
           {children}
-{/*           
+          {/*           
           <footer>
             <div className='text-muted-foreground mx-auto flex size-full max-w-7xl items-center justify-between gap-3 px-4 py-3 max-sm:flex-col sm:gap-6 sm:px-6'>
               <p className='text-sm text-balance max-sm:text-center'>
@@ -341,5 +341,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </SidebarProvider>
     </div>
-  )
+  );
 }
