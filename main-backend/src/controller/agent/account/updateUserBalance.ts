@@ -4,6 +4,8 @@ const updateUserBalance = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  
+};
 
 export default updateUserBalance;

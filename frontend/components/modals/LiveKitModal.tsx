@@ -8,14 +8,18 @@ import {
   BarVisualizer,
 } from "@livekit/components-react";
 import { Room } from "livekit-client";
-import "@livekit/components-styles";
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context";
 
-export default function LiveKitModal({ onClose }: { onClose: () => void }) {
+type LiveKitModalProps = {
+  onClose: () => void;
+  dockSide: "left" | "right";
+};
+
+export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
   const { user } = useAppContext();
-  const [token, setToken] = useState();
-  const room = `session-${Date.now()}`;
+  const [token, setToken] = useState<string | undefined>();
+  const roomName = `session-${Date.now()}`;
   const name = `quickstart-user`;
   const [roomInstance, setRoomInstance] = useState<Room | undefined>();
 
@@ -41,7 +45,7 @@ export default function LiveKitModal({ onClose }: { onClose: () => void }) {
     (async () => {
       try {
         const resp = await fetch(
-          `/api/token?room=${room}&username=${name}&userData=${encodeURIComponent(
+          `/api/token?room=${roomName}&username=${name}&userData=${encodeURIComponent(
             JSON.stringify(user)
           )}`
         );
@@ -65,40 +69,54 @@ export default function LiveKitModal({ onClose }: { onClose: () => void }) {
       mounted = false;
       roomInstance.disconnect();
     };
-  }, [roomInstance]);
+  }, [roomInstance, roomName, name, user]);
 
   if (!roomInstance) return <div>Loading room instance…</div>;
   if (!token) return <div>Loading connection…</div>;
 
+  const sideAlign =
+    dockSide === "right"
+      ? "items-end justify-end pr-6"
+      : "items-end justify-start pl-6";
+
   return (
     <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9998]" />
+      {/* Backdrop (subtle) */}
 
-      {/* Modal container */}
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+      {/* Modal container anchored to bottom on chosen side */}
+      <div
+        className={`fixed inset-0 z-[9999] flex ${sideAlign} pb-6 pointer-events-none`}
+      >
         <div
           className="
-            w-[28rem] h-[38rem]
-            bg-[#0f0f0f] 
-            border border-white/10 
-            rounded-2xl 
+            pointer-events-auto
+            w-[28rem] h-[42rem]
+            rounded-2xl border border-border
+            bg-white
             shadow-2xl 
             p-4 
             flex flex-col 
             relative
-            animate-[fadeIn_0.3s_ease]
+            transform
+            origin-bottom
+            transition-transform transition-opacity
+            duration-200
+            ease-out
+            animate-[fadeIn_0.2s_ease-out]
+            lk-modal
           "
+          data-lk-theme="custom"
         >
-          {/* Close Button */}
+          {/* Close / minimize Button */}
           <button
             onClick={onClose}
             className="
               absolute top-3 right-3 
-              px-3 py-1 
-              rounded-lg 
-              bg-white/10 hover:bg-white/20 
-              text-sm
+              px-2 py-1 
+              rounded-md 
+              text-xs
+              text-gray-500 hover:text-gray-700
+              hover:bg-gray-100
             "
           >
             ✕
@@ -108,25 +126,40 @@ export default function LiveKitModal({ onClose }: { onClose: () => void }) {
             <RoomAudioRenderer />
 
             {/* Visualizer */}
-            <div className="mb-3">
-              <BarVisualizer />
+            <div className="pb-3 border-b border-gray-200 flex items-center justify-center">
+              <BarVisualizer
+                barCount={7}
+                style={{
+                  height: "3.5rem",
+                  width: "100%",
+                }}
+              />
             </div>
 
             {/* Chat Window */}
-            <div className="flex-1 border border-white/10 rounded-lg overflow-hidden mb-3">
-              <Chat />
+            <div className="flex flex-col flex-1 overflow-hidden pt-4">
+              <div className="flex-1 overflow-hidden flex justify-center">
+                <Chat
+                  style={{
+                    width: "24rem",
+                  }}
+                />
+              </div>
             </div>
 
             {/* Controls */}
-            <ControlBar
-              variation="minimal"
-              controls={{
-                microphone: true,
-                camera: false,
-                screenShare: false,
-                leave: true,
-              }}
-            />
+            <div className="pt-3">
+              <ControlBar
+                variation="minimal"
+                data-lk-theme="control"
+                controls={{
+                  microphone: true,
+                  camera: false,
+                  screenShare: false,
+                  leave: true,
+                }}
+              />
+            </div>
           </RoomContext.Provider>
         </div>
       </div>
