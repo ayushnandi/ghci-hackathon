@@ -51,7 +51,7 @@ export function AppSidebar({ items }: { items: SidebarConfig[] }) {
         {items.map((entry, index) => {
           if (entry.type === "item") {
             return (
-              <SidebarMenuItem>
+              <SidebarMenuItem key={index}>
                 <SidebarMenuButton asChild isActive={pathname === entry.href}>
                   <Link className="" href={entry.href}>
                     <entry.icon className="size-4" />

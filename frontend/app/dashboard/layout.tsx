@@ -17,6 +17,11 @@ import {
   SettingsIcon,
   SlidersIcon,
   PiggyBankIcon,
+  BellIcon,
+  ShieldIcon,
+  PlusCircleIcon,
+  CreditCardIcon,
+  WalletIcon,
 } from "lucide-react";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 
@@ -30,18 +35,58 @@ const sidebarItems: SidebarConfig[] = [
   {
     type: "item",
     title: "Account",
-    href: "/dashboard/account/user-data",
+    href: "/dashboard/account",
     icon: UserIcon,
   },
+  {
+    type: "item",
+    title: "Card Management",
+    href: "/dashboard/card-management",
+    icon: CreditCardIcon,
+  },
+  {
+    type: "item",
+    title: "Deposit Services",
+    href: "/dashboard/deposit-services",
+    icon: LandmarkIcon,
+  },
+  {
+    type: "item",
+    title: "Investments",
+    href: "/dashboard/investments",
+    icon: TrendingUpIcon,
+  },
+
+  //
+  //  NET BANKING (flattened)
+  //
   {
     type: "group",
     label: "Net Banking",
     items: [
       {
         type: "item",
-        title: "Loans",
-        href: "/dashboard/loans",
-        icon: LandmarkIcon,
+        title: "View Investments",
+        href: "/dashboard/net-banking/investments",
+        icon: WalletIcon,
+      },
+      {
+        type: "item",
+        title: "Create Investment",
+        href: "/dashboard/net-banking/investments/create",
+        icon: PlusCircleIcon,
+      },
+      {
+        type: "item",
+        title: "View Loans",
+        href: "/dashboard/net-banking/loans",
+        icon: CreditCardIcon,
+      },
+      {
+        type: "item",
+        title: "Create Loan",
+        href: "/dashboard/net-banking/loans/create",
+        icon: PlusCircleIcon,
       },
       {
         type: "item",
@@ -49,29 +94,21 @@ const sidebarItems: SidebarConfig[] = [
         href: "/dashboard/net-banking/deposits",
         icon: PiggyBankIcon,
       },
-      {
-        type: "item",
-        title: "Investments",
-        href: "/dashboard/investments",
-        icon: TrendingUpIcon,
-      },
     ],
   },
+
+  //
+  // Alerts + Notifications (flattened)
+  //
   {
     type: "group",
     label: "Alerts & Reminders",
     items: [
       {
         type: "item",
-        title: "Reminders",
-        href: "/dashboard/reminders",
-        icon: LandmarkIcon,
-      },
-      {
-        type: "item",
-        title: "Alerts",
-        href: "/dashboard/alerts",
-        icon: PiggyBankIcon,
+        title: "Alerts & Reminders",
+        href: "/dashboard/alerts-notifications",
+        icon: BellIcon,
       },
     ],
   },
@@ -80,12 +117,6 @@ const sidebarItems: SidebarConfig[] = [
     title: "Settings",
     href: "/dashboard/settings",
     icon: SettingsIcon,
-  },
-  {
-    type: "item",
-    title: "Settings & Integrations",
-    href: "/dashboard/settings-integrations",
-    icon: SlidersIcon,
   },
 ];
 
