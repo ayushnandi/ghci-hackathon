@@ -4,12 +4,11 @@ import {
   ControlBar,
   RoomAudioRenderer,
   RoomContext,
-  Chat,
-  BarVisualizer,
 } from "@livekit/components-react";
-import { Room } from "livekit-client";
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context";
+import axios from "axios";
+import LiveKitContent from "../LivekitCmp";
 
 type LiveKitModalProps = {
   onClose: () => void;
@@ -17,26 +16,32 @@ type LiveKitModalProps = {
 };
 
 export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
-  const { user } = useAppContext();
+  const { user, setUser, roomInstance } = useAppContext();
+
   const [token, setToken] = useState<string | undefined>();
-  const roomName = `session-${Date.now()}`;
-  const name = `quickstart-user`;
-  const [roomInstance, setRoomInstance] = useState<Room | undefined>();
+  const [roomName, setRoomName] = useState("");
+  const [username, setUserName] = useState("");
 
-  /** Create room instance */
+  /** Fetch user, set roomName and username */
   useEffect(() => {
-    const room = new Room({
-      adaptiveStream: true,
-      dynacast: true,
-    });
-    setRoomInstance(room);
-
-    return () => {
-      room.disconnect();
+    const getUser = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/protected/user`,
+          { withCredentials: true }
+        );
+        setUser(data.user);
+        setRoomName(data.user.clerk.id);
+        setUserName(data.user.clerk.firstName);
+      } catch (error) {
+        console.log(error);
+      }
     };
+
+    getUser();
   }, []);
 
-  /** Connect to LiveKit */
+  /** Connect to LiveKit using global room instance */
   useEffect(() => {
     if (!roomInstance) return;
 
@@ -44,8 +49,10 @@ export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
 
     (async () => {
       try {
+        if (!user) return;
+
         const resp = await fetch(
-          `/api/token?room=${roomName}&username=${name}&userData=${encodeURIComponent(
+          `/api/token?room=${roomName}&username=${username}&userData=${encodeURIComponent(
             JSON.stringify(user)
           )}`
         );
@@ -66,10 +73,10 @@ export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
     })();
 
     return () => {
+      // IMPORTANT: Do NOT disconnect on modal close
       mounted = false;
-      roomInstance.disconnect();
     };
-  }, [roomInstance, roomName, name, user]);
+  }, [roomInstance, roomName, user, username]);
 
   if (!roomInstance) return <div>Loading room instance…</div>;
   if (!token) return <div>Loading connection…</div>;
@@ -81,9 +88,7 @@ export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
 
   return (
     <>
-      {/* Backdrop (subtle) */}
-
-      {/* Modal container anchored to bottom on chosen side */}
+      {/* Backdrop */}
       <div
         className={`fixed inset-0 z-[9999] flex ${sideAlign} pb-6 pointer-events-none`}
       >
@@ -107,7 +112,6 @@ export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
           "
           data-lk-theme="custom"
         >
-          {/* Close / minimize Button */}
           <button
             onClick={onClose}
             className="
@@ -124,30 +128,8 @@ export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
 
           <RoomContext.Provider value={roomInstance}>
             <RoomAudioRenderer />
+            <LiveKitContent username={username} />
 
-            {/* Visualizer */}
-            <div className="pb-3 border-b border-gray-200 flex items-center justify-center">
-              <BarVisualizer
-                barCount={7}
-                style={{
-                  height: "3.5rem",
-                  width: "100%",
-                }}
-              />
-            </div>
-
-            {/* Chat Window */}
-            <div className="flex flex-col flex-1 overflow-hidden pt-4">
-              <div className="flex-1 overflow-hidden flex justify-center">
-                <Chat
-                  style={{
-                    width: "24rem",
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Controls */}
             <div className="pt-3">
               <ControlBar
                 variation="minimal"
@@ -156,7 +138,7 @@ export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
                   microphone: true,
                   camera: false,
                   screenShare: false,
-                  leave: true,
+                  leave: true, // LiveKit will handle disconnect
                 }}
               />
             </div>

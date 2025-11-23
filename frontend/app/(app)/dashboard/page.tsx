@@ -104,17 +104,17 @@ export default function Dashboard() {
     },
   ];
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/protected/user`,
-        { withCredentials: true }
-      );
-      console.log("user Data: ", data.user);
-      setUser(data.user);
-    };
-    fetchUserData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const { data } = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/protected/user`,
+  //       { withCredentials: true }
+  //     );
+  //     console.log("user Data: ", data.user);
+  //     setUser(data.user);
+  //   };
+  //   fetchUserData();
+  // }, []);
 
   return (
     <div className="p-6">

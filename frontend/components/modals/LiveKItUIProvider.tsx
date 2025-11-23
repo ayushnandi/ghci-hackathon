@@ -3,9 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import LiveKitModal from "./LiveKitModal";
 import { BarVisualizer } from "@livekit/components-react";
+import { useAppContext } from "@/context";
 
 const MINI_WIDTH = 220;
-const MINI_HEIGHT = 64;
+const MINI_HEIGHT = 100;
 const MARGIN = 24;
 
 export default function LiveKitUIProvider({
@@ -13,6 +14,7 @@ export default function LiveKitUIProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { mainState, agentAudioTrack } = useAppContext();
   const [open, setOpen] = useState(false);
   const [dockSide, setDockSide] = useState<"left" | "right">("right");
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -105,6 +107,7 @@ export default function LiveKitUIProvider({
             fixed z-[9998]
             rounded-xl border border-border
             bg-white shadow-xl
+            h-[12rem]
             cursor-pointer flex items-center justify-center
             transition-transform duration-150
           "
@@ -117,8 +120,9 @@ export default function LiveKitUIProvider({
         >
           {/* Static BarVisualizer for idle state */}
           <BarVisualizer
-            barCount={7}
-            style={{ width: "100%", height: "100%" }}
+            barCount={5}
+            state={mainState}
+            track={agentAudioTrack}
           />
         </div>
       )}
