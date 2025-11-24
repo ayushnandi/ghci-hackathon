@@ -19,7 +19,7 @@ It brings together real-time audio streaming, solid backend systems and smart re
 
 ### Sys Architecture:   
 <img width="1236" height="660" alt="file_2025-11-23_10 30 37 1" src="https://github.com/user-attachments/assets/7b2948ca-45ae-4370-acfc-d1ab1c43e0bc" />
-
+video link: https://drive.google.com/file/d/1-gRD_t1zeTwdNjJJUZ-7EFJMr7leKOht/view?usp=sharing
 
 ## 🧩 Core Features
 
