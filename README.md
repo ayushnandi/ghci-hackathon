@@ -59,7 +59,7 @@ This keeps everything simple, scalable and easy for judges to understand.
 - AssemblyAI STT  
 - Cartesia Sonic 3  
 - Backend tool integration
-
+- Server 
 ### Backend (Node + Express)
 - REST APIs for accounts, balances and transactions  
 - MongoDB for mock data  
@@ -71,6 +71,7 @@ This keeps everything simple, scalable and easy for judges to understand.
 - LiveKit client components  
 - Secure login  
 - Real time responses
+- Updates via voice commands for each user scalabely
 
 
 
