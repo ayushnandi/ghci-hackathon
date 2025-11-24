@@ -82,35 +82,127 @@ class GenericAssistant(Agent):
         return {"status": "ok", "reminder": reminder}
 
     @function_tool()
-    async def create_transaction(self, ctx: RunContext, sendTo: str, id: bool):
+    async def create_transaction(self, ctx: RunContext, sendTo: str, amount: int, isId: bool = False):
         """
         Create a transaction for user.
         ARGS:
-        - title: Title of the reminder
-        - description: Description of the reminder
-        - date: Date of the reminder
-        - time: Time of the reminder
-        - type: Type of the reminder (e.g., payment, meeting, etc.)
+        - sendTo: The receivers account id, email, phone no or relationship name
+        - amount: the amount to send
+        - isId: to signify the backend that this is not an id email or phone no but a relationship name
         Creates a reminder for the user and pushes it to the UI.
         """
 
+        # push the event to the UI
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{BACKEND_URL}/api/v1/agents/transaction",
+                json={
+                        "id" : ctx.session.userdata.id,
+                        "identifier": sendTo,
+                        "amount" : amount,
+                        "relationship": isId
+                    }
+            )
+            return response.json()
+    
+    
+    @function_tool()
+    async def verify_transaction(self, ctx: RunContext, otp: str):
+        """
+        Verify a transaction for user. If verification fails ask user to recreate transaction.
+        ARGS:
+        - otp: The otp sent to the user
+        Verifies a transaction for the user.
+        """
 
-        # build reminder object
-        reminder = {
-            "id": f"{date}-{time}",
-            "title": title,
-            "description": description,
-            "date": date,
-            "time": time,
-            "type": type,
-            "status": "active"
-        }
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{BACKEND_URL}/api/v1/agents/transaction/verify",
+                json={
+                        "id" : ctx.session.userdata.id,
+                        "otp": otp
+                    }
+            )
+            return response.json()
+        
+    @function_tool()
+    async def get_transaction_history(self, ctx: RunContext):
+        """
+        Fetch transaction history for user.
+        """
+
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"{BACKEND_URL}/api/v1/agents/transaction/history/{ctx.session.userdata.id}"
+            )
+            return response.json()
+        
+    @function_tool()
+    async def create_relationships(self, ctx: RunContext, receiver_identifier: str, receiver_id: str, id_type: str):
+        """
+        Create a relationship for user.
+        ARGS:
+        - receiver_identifier: The receivers account id, email, or phone no
+        - receiver_id: The unique id of the receiver
+        - id_type: Type of the identifier (e.g., email, phone, account_id)
+        Creates a relationship for the user.
+        """
 
         # push the event to the UI
         async with httpx.AsyncClient() as client:
-            await client.post(
-                f"{BACKEND_URL}/api/v1/agents/reminder/user_35n5MPjm6HTLT3zsAB2drmbwmMi",
-                json={"reminders": [reminder]}
+            response = await client.post(
+                f"{BACKEND_URL}/api/v1/agents/relationship",
+                json={
+                        "id" : ctx.session.userdata.id,
+                        "identifier": receiver_identifier,
+                        "receiver_id" : receiver_id,
+                        "id_type": id_type
+                    }
             )
+            return response.json()
+    
+    @function_tool()
+    async def get_relationships(self, ctx: RunContext):
+        """
+        Fetch relationships for user.
+        """
 
-        return {"status": "ok", "reminder": reminder}
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"{BACKEND_URL}/api/v1/agents/relationship/{ctx.session.userdata.id}"
+            )
+            return response.json()
+    
+    @function_tool()
+    async def get_ui_chips(self, ctx: RunContext):
+        """
+        Fetch UI chips to display to user with relevant info.
+        """
+
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"{BACKEND_URL}/api/v1/agents/ui_chips/{ctx.session.userdata.id}"
+            )
+            return response.json()
+    
+        return {status: False, message: "Error encountered in ui chips"}
+    
+    @function_tool()
+    async def push_ui_chips(self, ctx: RunContext):
+        """
+        Push UI chips to display to user with relevant info.
+        """
+
+        ui_chips = [
+            {"type": "balance", "label": "Check Balance"},
+            {"type": "transaction", "label": "Recent Transactions"},
+            {"type": "transfer", "label": "Transfer Money"},
+            {"type": "loans", "label": "View Loans"},
+        ]
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{BACKEND_URL}/api/v1/agents/ui_chips/{ctx.session.userdata.id}",
+                json={"ui_chips": ui_chips}
+            )
+            return response.json()
