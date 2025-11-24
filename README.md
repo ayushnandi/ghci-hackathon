@@ -17,6 +17,8 @@ FinChorus fixes that by letting users talk to their bank directly using natural 
 
 It brings together real-time audio streaming, solid backend systems and smart reasoning to create a smooth, almost human experience.
 
+### Sys Architecture:   
+<img width="1236" height="660" alt="file_2025-11-23_10 30 37 1" src="https://github.com/user-attachments/assets/7b2948ca-45ae-4370-acfc-d1ab1c43e0bc" />
 
 
 ## 🧩 Core Features
