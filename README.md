@@ -32,6 +32,7 @@ FinChorus understands everyday language for tasks like:
 - Viewing recent transactions
 - Asking about loans, interest rates or credit limits
 - Setting reminders or alerts
+- Automatically understand and perform actions in the user's language.
 
 ### 2. Real Time Conversational Intelligence
 - STT: AssemblyAI Universal Streaming  
