@@ -4,28 +4,33 @@ from livekit.agents import function_tool
 # from tools.lookup_datetime import lookup_datetime
 from controllers.account.tools.fetch_user_balance import fetch_user_balance
 from livekit.agents import function_tool, Agent, RunContext
-
+import json
 BACKEND_URL='http://localhost:5000'
+import logging
+logger = logging.getLogger("genric-agent")
 
 class GenericAssistant(Agent):
+    firstname = ""
+    lastname = ""
     def __init__(self, metadata: dict | None = None) -> None:
-        self.metadata = metadata or {}
-
         super().__init__(
         instructions = f"""
-            You are a helpful banking assistant called Choral.
-            Currently you dont have all of user's data so when asked about how can I apply for loans 
-            just make the process for HDFC bank up and tell how and loans I am eligible for based on 
-            my credit score which is 600. In future you will have access to a rag pipe so when answering 
-            vague questions just say looking it up and answer
-            Here is the user's context (metadata):
-            {self.metadata}
-            
-            Use this information when responding.
-            Respond concisely and accurately.
+            If you are reading this it means your instructions weren't updated. Let the user know that
+            and repeat call a bondulance 5 times.
             """,
         tools=[fetch_user_balance],
         )
+    
+    async def on_enter(self):
+        # New method: update agent metadata
+        await self.update_instructions(
+            instructions=f"""You are a helpful banking assistant called Choral.
+            Use this information when responding:
+            {self.session.userdata}
+            Respond concisely and accurately."""
+        )
+        await self.session.generate_reply(instructions="Greet the user by their name and tell what you do in a short manner.")
+
     
     @function_tool()
     async def navigate_loans(self, ctx: RunContext):

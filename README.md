@@ -13,7 +13,7 @@ FinChorus solves this by enabling users to perform financial tasks through **nat
 It combines:
 
 - Real-time audio streaming  
-- NLP-based reasoning  
+- navigate automatically through screens
 - Secure authentication  
 - Banking microservices  
 
@@ -27,7 +27,6 @@ It combines:
 FinChorus understands and processes natural language commands for tasks such as:
 
 - Checking account balances 
-- Control and guide user through the interface
 - Making mock fund transfers  
 - Viewing recent transactions  
 - Inquiring about loans, interest rates, or credit limits 

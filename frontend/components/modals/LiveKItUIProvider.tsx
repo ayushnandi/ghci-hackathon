@@ -55,13 +55,11 @@ export default function LiveKitUIProvider({ children }: { children: React.ReactN
     if (!dragging.current) return;
     dragging.current = false;
 
-    // CLICK → open modal
     if (!moved.current) {
       setOpen(true);
       return;
     }
 
-    // --- SNAP ONLY BOTTOM LEFT/RIGHT ---
     const width = window.innerWidth;
 
     const snapSide: "left" | "right" =
@@ -91,7 +89,6 @@ export default function LiveKitUIProvider({ children }: { children: React.ReactN
 
   return (
     <>
-      {/** 🔊 GLOBAL AUDIO RENDERER — ALWAYS ON */}
       {roomInstance && (
         <RoomContext.Provider value={roomInstance}>
           <RoomAudioRenderer />
@@ -124,7 +121,6 @@ export default function LiveKitUIProvider({ children }: { children: React.ReactN
         </div>
       )}
 
-      {/* FULL MODAL WHEN OPEN */}
       {open && <LiveKitModal dockSide={dockSide} onClose={() => setOpen(false)} />}
     </>
   );
