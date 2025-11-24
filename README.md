@@ -4,8 +4,8 @@ FinChorus is a voice-driven banking assistant built for natural, fast and secure
 Made for Theme Statement 4: AI Voice Assistant for Financial Operations.  
 This project shows a complete end to end conversational banking experience powered by real-time voice tech and a modern AI stack.
 
-## Demo video :
-[file:video.mov](https://drive.google.com/file/d/1yxvGFXCTzOc7BuxOin8RhmiMcW-Q0zZ1/view?usp=sharing)
+Demo video :  ![click here](https://drive.google.com/file/d/1yxvGFXCTzOc7BuxOin8RhmiMcW-Q0zZ1/view?usp=sharing)
+
 
 
 ![WhatsApp Image 2025-11-23 at 22 35 41_a7be34c3](https://github.com/user-attachments/assets/7eb77324-a2b6-4b71-b2c3-a7161fb25a68)
