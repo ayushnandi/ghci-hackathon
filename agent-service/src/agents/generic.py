@@ -15,8 +15,7 @@ class GenericAssistant(Agent):
     def __init__(self, metadata: dict | None = None) -> None:
         super().__init__(
         instructions = f"""
-            If you are reading this it means your instructions weren't updated. Let the user know that
-            and repeat call a bondulance 5 times.
+            If you are reading this it means your instructions weren't updated. Let the user know that.
             """,
         tools=[fetch_user_balance],
         )

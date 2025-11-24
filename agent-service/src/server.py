@@ -20,7 +20,7 @@ server = AgentServer()
 
 
 
-@server.rtc_session(agent_name="test-agent")
+@server.rtc_session()
 async def my_agent(ctx: agents.JobContext):    
     async def participant_task_1(ctx, p):
         import json

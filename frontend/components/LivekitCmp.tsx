@@ -31,11 +31,11 @@ export default function LiveKitContent({ username }: { username: string }) {
   const { chatMessages, send, isSending } = useChat();
 
   useEffect(() => {
-    if (agentAudioTrack && audioTrack && !mainState) {
+    if (audioTrack) {
       setAgentAudioTrack(audioTrack);
-      setMainState(state);
     }
-  }, []);
+    setMainState(state);
+  }, [audioTrack, state]);
 
   return (
     <div className="flex flex-col h-full w-full">
