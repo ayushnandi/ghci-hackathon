@@ -4,10 +4,11 @@ from livekit.agents import function_tool
 # from tools.lookup_datetime import lookup_datetime
 from controllers.account.tools.fetch_user_balance import fetch_user_balance
 from livekit.agents import function_tool, Agent, RunContext
-import json
+from typing import List, Dict, Optional
 BACKEND_URL='http://localhost:5000'
 import logging
 import asyncio
+import json
 
 logger = logging.getLogger("genric-agent")
 
@@ -173,33 +174,65 @@ class GenericAssistant(Agent):
     @function_tool()
     async def get_ui_chips(self, ctx: RunContext):
         """
-        Fetch UI chips to display to user with relevant info.
+        Fetches available UI card/chip types and supported actions from backend.
+        Used by AI to determine what UI constructs it may generate.
         """
 
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{BACKEND_URL}/api/v1/agents/ui_chips/{ctx.session.userdata.id}"
+                f"{BACKEND_URL}/api/v1/agents/uichips"
             )
             return response.json()
     
         return {status: False, message: "Error encountered in ui chips"}
     
-    # @function_tool()
-    # async def push_ui_chips(self, ctx: RunContext, data:object, ui_type: str):
-    #     """
-    #     Push UI chips to display to user with relevant info.
-    #     """
 
-    #     ui_chips = [
-    #         {"type": "balance", "label": "Check Balance"},
-    #         {"type": "transaction", "label": "Recent Transactions"},
-    #         {"type": "transfer", "label": "Transfer Money"},
-    #         {"type": "loans", "label": "View Loans"},
-    #     ]
+    @function_tool()
+    async def push_ui_chips(
+        ctx: RunContext,
+        chip_type: str,
+        title: str,
+        value: str = "",
+        label: str = "",
+        action_type: str = "",
+        action_payload: str = "",
+    ):
+        """
+        Push a UI chip or card to the frontend UI to show the user. Use get_ui_chips to know what you can generate.
+        Fill rest of the details yourself if they are missing just pass in the 
 
-    #     async with httpx.AsyncClient() as client:
-    #         response = await client.post(
-    #             f"{BACKEND_URL}/api/v1/agents/ui_chips/{ctx.session.userdata.id}",
-    #             json={"ui_chips": ui_chips}
-    #         )
-    #         return response.json()
+        ARGS:
+        - chip_type: UI element type ('card' | 'chip')
+        - title: Title or label text
+        - value: Optional displayed value for cards
+        - label: Text for chip buttons
+        - action_type: 'redirect' or 'copy'
+        - action_payload: URL/text depending on action
+        """
+
+        payload = {
+            "ui_cards": [
+                {
+                    "type": chip_type,
+                    "data": {
+                        "title": title,
+                        "value": value,
+                        "label": label,
+                    },
+                    "actions": [
+                        {
+                            "type": action_type,
+                            "payload": action_payload,
+                        }
+                    ],
+                }
+            ]
+        }
+
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{BACKEND_URL}/api/v1/agents/uichips/{ctx.session.userdata.id}",
+                json=payload,
+            )
+        return response.json()

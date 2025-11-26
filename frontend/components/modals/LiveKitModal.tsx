@@ -1,15 +1,13 @@
 "use client";
 
-import {
-  ControlBar,
-  RoomAudioRenderer,
-  RoomContext,
-} from "@livekit/components-react";
+import { RoomAudioRenderer, RoomContext } from "@livekit/components-react";
 import { useEffect, useState } from "react";
-import { useAppContext } from "@/context";
+import { UICard, useAppContext } from "@/context";
 import axios from "axios";
 import LiveKitContent from "../LivekitCmp";
 import StatisticsCard from "../shadcn-studio/blocks/statistics-card-01";
+import { useRouter } from "next/navigation";
+import { BrainIcon } from "lucide-react";
 
 type LiveKitModalProps = {
   onClose: () => void;
@@ -17,11 +15,24 @@ type LiveKitModalProps = {
 };
 
 export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
-  const { user, setUser, roomInstance } = useAppContext();
-
+  const { user, setUser, roomInstance, uiCards } = useAppContext();
+  const router = useRouter();
   const [token, setToken] = useState<string | undefined>();
   const [roomName, setRoomName] = useState("");
   const [username, setUserName] = useState("");
+
+  const handleAction = (action: any) => {
+    switch (action.type) {
+      case "redirect":
+        router.push(action.payload);
+        break;
+      case "copy":
+        navigator.clipboard.writeText(action.payload);
+        break;
+      default:
+        console.warn("Unknown action:", action.type);
+    }
+  };
 
   /** Fetch user, set roomName and username */
   useEffect(() => {
@@ -94,18 +105,55 @@ export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-[9999] flex ${sideAlign} pb-6 pointer-events-none flex-col`}
+        className={`fixed inset-0 z-[9999] flex ${sideAlign} pointer-events-none`}
       >
-        {true && (
-          <div className="w-[28rem] mb-4">
-            <StatisticsCard
-              icon={"sdas"}
-              value="asdas"
-              title="asdasd"
-              changePercentage="0"
-            />
-          </div>
-        )}
+        <div className="flex-col mr-4">
+          {uiCards.length > 0 && (
+            <div className="w-[28rem] flex flex-col gap-3 mb-4 z-[9999]">
+              {uiCards.map((card: UICard, index: number) => (
+                <div
+                  key={index}
+                  className="slide-fade-in p-2 rounded-xl bg-white shadow-lg border border-gray-200"
+                >
+                  {card.type === "card" && (
+                    <StatisticsCard
+                      icon={<BrainIcon />}
+                      value={card.data?.value ?? ""}
+                      title={card.data?.title ?? ""}
+                      changePercentage={String(
+                        card.data?.changePercentage ?? "0"
+                      )}
+                    />
+                  )}
+
+                  {card.type === "chip" && (
+                    <button
+                      className="px-4 py-2 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+                      onClick={() => handleAction(card.actions?.[0])}
+                    >
+                      {card.data?.label}
+                    </button>
+                  )}
+
+                  {card.actions && card.actions.length > 0 && (
+                    <div className="flex gap-2 mt-2">
+                      {card.actions.map((action, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleAction(action)}
+                          className="px-3 py-1 text-sm rounded-md border border-gray-300 hover:bg-gray-100 transition"
+                        >
+                          {action.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div
           className="
             pointer-events-auto

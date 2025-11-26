@@ -18,7 +18,7 @@ interface Reminder {
 
 export default function StreamListener() {
   const { user, isLoaded } = useUser();
-  const { setReminders } = useAppContext();
+  const { setReminders, setUICards } = useAppContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -26,62 +26,73 @@ export default function StreamListener() {
 
     const userId = user.id;
 
-    console.log("🔌 Connecting to SSE for user:", userId);
+    console.log("🔌 Connecting SSE for:", userId);
 
     const evt = new EventSource(`/api/stream/${userId}`);
 
-    evt.onmessage = (e) => {
-      const msg = e.data;
-
-      // 👉 NAVIGATION
-      if (msg.startsWith("navigate:")) {
-        const path = msg.replace("navigate:", "");
-        console.log("➡️ Navigating to:", path);
-        router.push(path);
-        return;
-      }
-
-      // 👉 REMINDER RECEIVED
-      if (msg.startsWith("reminder:")) {
-        const jsonString = msg.replace("reminder:", "");
-
-        try {
-          const reminder = JSON.parse(jsonString);
-          console.log("🆕 Adding reminder:", reminder);
-
-          // add to reminders inside context
-          setReminders((prev: Reminder[]) => [...prev, reminder]);
-        } catch (err) {
-          console.error("❌ Could not parse reminder JSON", err);
-        }
-      }
-    };
-
-    evt.onerror = (err) => {
-      console.error("❌ SSE ERROR:", err);
-    };
+    evt.onmessage = (evt) =>
+      eventHandler(evt, router, setReminders, setUICards);
+    evt.onerror = (err) => console.error("❌ SSE error:", err);
 
     return () => evt.close();
-  }, [isLoaded, user, router, setReminders]);
+  }, [isLoaded, user]);
 
   return null;
 }
 
-const eventHandler = (evt: MessageEvent<any>, router: AppRouterInstance) => {
+const eventHandler = (
+  evt: MessageEvent<any>,
+  router: AppRouterInstance,
+  setReminders: Function,
+  setUICards: Function
+) => {
   const msg = evt.data;
-  switch (msg) {
-    case msg.startsWith("navigate:"):
+
+  switch (true) {
+    case msg.startsWith("navigate:"): {
       const path = msg.replace("navigate:", "");
+      console.log("➡️ Navigating to:", path);
       router.push(path);
       break;
-    case msg.startsWith("ui_chips:"):
-      // handle ui chips
+    }
+
+    case msg.startsWith("reminder:"): {
+      try {
+        const reminder = JSON.parse(msg.replace("reminder:", ""));
+        console.log("🆕 Reminder received:", reminder);
+        setReminders((prev: Reminder[]) => [...prev, reminder]);
+      } catch (err) {
+        console.error("❌ Reminder parse error:", err);
+      }
       break;
-    case msg === "refresh":
+    }
+
+    case msg.startsWith("ui_card:"): {
+      try {
+        const card = JSON.parse(msg.replace("ui_card:", ""));
+        console.log("🃏 UI Card received:", card);
+
+        setUICards((prev: any[]) => [
+          ...prev,
+          ...(Array.isArray(card) ? card : [card]),
+        ]);
+
+        setTimeout(() => {
+          setUICards((prev: any[]) => prev.slice(1));
+        }, 8000);
+      } catch (err) {
+        console.error("❌ Failed to parse UI Card:", err);
+      }
+      break;
+    }
+
+    case msg === "refresh": {
+      console.log("🔄 Refreshing page...");
       router.refresh();
       break;
+    }
 
     default:
-      break;
+      console.warn("⚠️ Unknown SSE event:", msg);
   }
 };
