@@ -109,7 +109,7 @@ LIVEKIT_URL=
 NEXT_PUBLIC_LIVEKIT_URL=
 NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
 ```
-### Backend (.env)
+### main-Backend (.env)
 ```
 MONGO_URI=mongodb://localhost:27017
 PORT=5000
@@ -120,6 +120,10 @@ CLERK_SECRET_KEY=
 CLERKID=
 ```
 
+### bank-mock-service (.env)
+```
+
+```
 
 ## 🧠 How It Works
 
@@ -134,7 +138,22 @@ CLERKID=
 
 Everything works in real time and feels smooth to use with the ability to create actions and perform operations on the frontend as well as the backend.
 
+## How To Run?
+### Requirements:
+1. Node.js 
+2. Python 
+3. MongoDB (local or provider uri)
 
+**Steps**
+1. Fork this repo and populate the .env files above with the correct envs provided.
+3. Install packages in each repo by running the following commands.
+   1. ```npm install``` in (banking-mock-service, frontend, main-backend)
+   2. ```pip install -r requirements.txt``` in (agent-service)
+4. Signup for accounts in Clerk & LiveKit to generate testable API keys.
+5. In seperate terminals run the following commands in each repo to test the repository.
+   1. npm run dev in (banking-mock-service, frontend, main-backend) Note: Build commands are available please refer package.json.
+   2. uv run src/server.py dev (to run livekit agent server in dev mode).
+6. Go to ```http://localhost:3000``` and sign up to create an account with Clerk on the application.
 
 ## 🏁 Conclusion
 
