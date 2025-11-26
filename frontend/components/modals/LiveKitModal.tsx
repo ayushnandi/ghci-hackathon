@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "@/context";
 import axios from "axios";
 import LiveKitContent from "../LivekitCmp";
+import StatisticsCard from "../shadcn-studio/blocks/statistics-card-01";
 
 type LiveKitModalProps = {
   onClose: () => void;
@@ -93,8 +94,18 @@ export default function LiveKitModal({ onClose, dockSide }: LiveKitModalProps) {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-[9999] flex ${sideAlign} pb-6 pointer-events-none`}
+        className={`fixed inset-0 z-[9999] flex ${sideAlign} pb-6 pointer-events-none flex-col`}
       >
+        {true && (
+          <div className="w-[28rem] mb-4">
+            <StatisticsCard
+              icon={"sdas"}
+              value="asdas"
+              title="asdasd"
+              changePercentage="0"
+            />
+          </div>
+        )}
         <div
           className="
             pointer-events-auto
