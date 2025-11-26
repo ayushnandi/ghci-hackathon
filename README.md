@@ -7,6 +7,7 @@ This project shows a complete end to end conversational banking experience power
 ![WhatsApp Image 2025-11-23 at 22 35 41_a7be34c3](https://github.com/user-attachments/assets/7eb77324-a2b6-4b71-b2c3-a7161fb25a68)
 
 <img width="1916" height="967" alt="image" src="https://github.com/user-attachments/assets/381f5867-77c7-412d-bcb3-fbe78e3c303a" />
+<img width="1918" height="1030" alt="image" src="https://github.com/user-attachments/assets/e3e57813-20b4-4798-8c76-582b421ffcb8" />
 
 
 
