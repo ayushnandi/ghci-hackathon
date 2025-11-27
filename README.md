@@ -145,10 +145,10 @@ FRONTEND_URL = http://localhost:5000
 Everything works in real time and feels smooth to use with the ability to create actions and perform operations on the frontend as well as the backend.
 
 **Todo:**
-- [] Convert frontend to PWA
-- [] OTP (Free Otp auth services unavailable or very limited)
-- [] Deploy to Cloud Providers
-- [] Voice biometrics
+- [ ] Convert frontend to PWA
+- [ ] OTP (Free Otp auth services unavailable or very limited)
+- [ ] Deploy to Cloud Providers
+- [ ] Voice biometrics
 
 ## How To Run?
 ### Requirements:
